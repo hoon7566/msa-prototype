@@ -36,7 +36,7 @@
 
 4. Spring cloud Config, Spring cloud Bus: 각 설정정보를 중앙화 및 암호화하고 설정정보가 바뀔시 무중단 빌드
 
-5. jpa:
+5. JPA: SQL 중심적 개발의 문제점을 해결하고 객체 중심으로 개발하기 위해
 
 6. bcrypt: 비밀번호 암호화
 - - - -
