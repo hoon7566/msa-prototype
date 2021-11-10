@@ -1,0 +1,18 @@
+package com.example.webfront.client;
+
+import com.example.webfront.dto.ResponseUser;
+import com.example.webfront.dto.UserDto;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+
+@FeignClient(name = "user-service",url="localhost:8000" ) //microservice의 name
+public interface UserServiceClient {
+
+    @PostMapping("/user-service/users")
+    ResponseUser createUser(@RequestBody UserDto userDto);
+}

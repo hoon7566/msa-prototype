@@ -6,29 +6,69 @@
 
 
     <th:block th:replace="fragments/bootstrap5"></th:block>
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $("#submit").click(function (){sendForm()})
+
+
+
+        });
+
+        function sendForm() {
+
+            $.ajax({
+                type: 'post'
+                , async: true
+                , url: 'users'
+                , data: JSON.stringify({				//JSON.stringify()로 데이터를 감싸줍니다.
+                    userId:$("#userId").val(),
+                    name:$("#name").val(),
+                    password:$("#password").val()
+                })
+                ,dataType : "json"
+                ,contentType: "application/json; charset=utf-8"
+                , beforeSend: function() {
+                }
+                , success: function (ajaxData, status, request) {
+                    alert("가입되었습니다.");
+                    location.href='/view/';
+                }
+                , error: function(request, status, err) {
+                    //console.error("error forward : "+data);
+                    callbackAjaxError(null, status, request, err); //error
+                }
+                , complete: function(request, status) {
+                    displayWaitOff();
+                }
+            });
+        }
+
+
+    </script>
 
 
 </head>
-<body>
+<body >
 <th:block th:replace="fragments/header"></th:block>
 
 <main>
     <div class="container py-5">
-        <form name="registerUser" action="users">
+        <form id="registerUser" name="registerUser">
             <div class="form-group">
                 <label class="col-form-label col-form-label-lg mt-4" >회원 가입</label>
-                <div class="form-floating">
+                <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="userId" name="userId" placeholder="userId">
-                    <label for="userId">userId</label>
+                    <label for="userId">Id</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="name" name="name" placeholder="백창훈">
-                    <label for="name">Email address</label>
+                    <label for="name">Name</label>
                 </div>
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password">
-                    <label for="pwd">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <label for="password">Password</label>
                 </div>
+                <button id="submit" type="button" class="btn btn-primary">Submit</button>
 
             </div>
         </form>
@@ -36,6 +76,5 @@
 
 </main>
 <th:block th:replace ="fragments/footer"></th:block>
-<script type="module" src="ex/js/ex.js"></script>
 </body>
 </html>

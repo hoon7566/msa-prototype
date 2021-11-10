@@ -22,7 +22,5 @@ public class UserEntity {
 
     private String encryptedPwd;
 
-    @Column(nullable = false , unique = true)
-    private Date createdAt;
 }
 
