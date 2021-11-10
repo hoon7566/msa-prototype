@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>회원가입</title>
+
+
+    <th:block th:replace="fragments/bootstrap5"></th:block>
+
+
+</head>
+<body>
+<th:block th:replace="fragments/header"></th:block>
+
+<main>
+    <div class="container py-5">
+        <form name="registerUser" action="users">
+            <div class="form-group">
+                <label class="col-form-label col-form-label-lg mt-4" >회원 가입</label>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="userId" name="userId" placeholder="userId">
+                    <label for="userId">userId</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="백창훈">
+                    <label for="name">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password">
+                    <label for="pwd">Password</label>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</main>
+<th:block th:replace ="fragments/footer"></th:block>
+<script type="module" src="ex/js/ex.js"></script>
+</body>
+</html>

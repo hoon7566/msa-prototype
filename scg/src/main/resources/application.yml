@@ -34,9 +34,15 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 #            - AuthorizationHeaderFilter
+        - id: frontend
+          uri: lb://FRONTEND
+          predicates:
+            - Path=/view/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/view/(?<segment>.*), /$\{segment}
+#            - AuthorizationHeaderFilter
 
-#token:
-#  secret: user_token
 management:
   endpoint:
   endpoints:
