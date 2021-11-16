@@ -8,5 +8,6 @@ spring:
 
 eureka:
   client:
-    fetch-registry: false
     register-with-eureka: false
+    fetch-registry: false
+    registry-fetch-interval-seconds: 3
