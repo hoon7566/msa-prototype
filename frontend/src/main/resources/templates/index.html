@@ -4,8 +4,13 @@
     <meta charset="utf-8">
     <title>index</title>
 
-    <th:block th:replace="fragments/bootstrap5"></th:block>
 
+    <script>
+        function init(){
+            console.log("index")
+        }
+
+    </script>
 
 </head>
 <body>
@@ -28,6 +33,6 @@
 </main>
 <th:block th:replace ="fragments/footer"></th:block>
 
-
+<th:block th:replace="fragments/bootstrap4"></th:block>
 </body>
 </html>

@@ -1,288 +1,262 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html>
+  <head>
     <meta charset="utf-8">
-    <title>헬스 용품</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Universal - All In 1 Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
 
-    <th:block th:replace="fragments/bootstrap5"></th:block>
-    <script>
-        function init(){
-            getProducts();
-        }
+  </head>
+  <body>
+    <div class="wide" id="all">
+      <!-- Top bar-->
+      <th:block th:replace="fragments/navigator"></th:block>
 
-        function getProducts(){
-
-            let data = {};
-
-            $.ajax({
-                type: 'get'
-                , async: true
-                , url: '/catalog-service/catalogs'
-                ,dataType : "json"
-                ,contentType: "application/json; charset=utf-8"
-                , beforeSend: function() {
-                }
-                , success: function (ajaxData, status, request) {
-                    drawList(ajaxData);
-                }
-                , error: function(request, status, err) {
-                    console.log(status,request,err);
-
-                }
-                , complete: function(request, status) {
-
-                }
-            });
-        }
-
-        function drawList(productList){
-            let html='';
-            for (const product of productList) {
-                html +='<div class="col mb-5">\n' +
-                    '                    <div class="card h-100">\n' +
-                    '                        <!-- Product image-->\n' +
-                    '                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">\n' +
-                    '                        <!-- Product details-->\n' +
-                    '                        <div class="card-body p-4">\n' +
-                    '                            <div class="text-center">\n' +
-                    '                                <!-- Product name-->\n' +
-                    '                                <h5 class="fw-bolder">'+product.productName+'</h5>\n' +
-                    '                                <!-- Product price-->\n' +
-                    '                                '+product.unitPrice+'\n' +
-                    '                            </div>\n' +
-                    '                        </div>\n' +
-                    '                        <!-- Product actions-->\n' +
-                    '                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">\n' +
-                    '                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">장바구니</a></div>\n' +
-                    '                        </div>\n' +
-                    '                    </div>\n' +
-                    '                </div>'
-            }
-            $("#productsContainer").html(html);
-        }
-
-
-
-    </script>
-
-</head>
-<body>
-<th:block th:replace="fragments/navigator"></th:block>
-<header class="bg-dark py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Health Product</h1>
-            <p class="lead fw-normal text-white-50 mb-0">헬스용품들 모아져 있읍니다.</p>
-        </div>
-    </div>
-</header>
-<main>
-    <section class="py-5">
-
-        <div class="container px-4 px-lg-5 mt-5">
-            <div id="productsContainer" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Fancy Product</h5>
-                                <!-- Product price-->
-                                $40.00 - $80.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                        </div>
-                    </div>
+            <!-- HEADING BREADCRUMB-->
+            <section class="bg-pentagon py-4">
+              <div class="container py-3">
+                <div class="row d-flex align-items-center gy-4">
+                  <div class="col-md-7">
+                    <h1 class="h2 mb-0 text-uppercase">Category with right sidebar</h1>
+                  </div>
+                  <div class="col-md-5">
+                    <!-- Breadcrumb-->
+                    <ol class="text-sm justify-content-start justify-content-lg-end mb-0 breadcrumb undefined">
+                      <li class="breadcrumb-item"><a class="text-uppercase" href="index.html">Home</a></li>
+                      <li class="breadcrumb-item text-uppercase active">Category with right sidebar      </li>
+                    </ol>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Special Item</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$20.00</span>
-                                $18.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
+              </div>
+            </section>
+      <!-- SHOP SECTION-->
+      <section class="py-5">
+        <div class="container py-4">
+          <div class="row g-5">
+            <!-- SHOP LISTING -->
+            <div class="col-lg-9">
+              <p class="text-muted lead text-center mb-5">In our Ladies department we offer wide selection of the best products we have found and carefully selected worldwide. Pellentesque habitant morbi tristique senectus et netuss.</p>
+              <div class="row gy-5 align-items-stretch">
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product1.jpg" alt="Fur coat with very but very very long name"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">Fur coat with very but very very long name</a></h3>
+                      <p class="mb-0">$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Sale Item</h5>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$50.00</span>
-                                $25.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product2.jpg" alt="White Blouse Armani"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">White Blouse Armani</a></h3>
+                      <p class="mb-0">
+                        <del class="text-gray-500 me-2">$200.00</del>$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                      <li class="mb-1">
+                        <div class="ribbon sale ribbon-primary">SALE</div>
+                      </li>
+                      <li class="mb-1">
+                        <div class="ribbon new ribbon-info">NEW</div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Popular Item</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                <!-- Product price-->
-                                $40.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product3.jpg" alt="Black Blouse Versace"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">Black Blouse Versace</a></h3>
+                      <p class="mb-0">$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Sale Item</h5>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$50.00</span>
-                                $25.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product4.jpg" alt="Black Blouse Versace"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">Black Blouse Versace</a></h3>
+                      <p class="mb-0">$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Fancy Product</h5>
-                                <!-- Product price-->
-                                $120.00 - $280.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                        </div>
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product3.jpg" alt=" White Blouse Armani"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html"> White Blouse Armani</a></h3>
+                      <p class="mb-0">
+                        <del class="text-gray-500 me-2">$200.00</del>$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                      <li class="mb-1">
+                        <div class="ribbon sale ribbon-primary">SALE</div>
+                      </li>
+                      <li class="mb-1">
+                        <div class="ribbon new ribbon-info">NEW</div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Special Item</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$20.00</span>
-                                $18.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
+                <div class="col-lg-4 col-md-6">
+                  <!-- Product-->
+                  <div class="product h-100">
+                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product4.jpg" alt="White Blouse Versace"></a></div>
+                    <div class="py-4 px-3 text-center">
+                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">White Blouse Versace</a></h3>
+                      <p class="mb-0">$143.00
+                      </p>
                     </div>
+                    <ul class="list-unstyled p-0 ribbon-holder mb-0">
+                      <li class="mb-1">
+                        <div class="ribbon new ribbon-info">NEW</div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Popular Item</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                <!-- Product price-->
-                                $40.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                        </div>
-                    </div>
-                </div>
+              </div><a class="d-block text-center py-4"><img class="img-fluid" src="img/banner2.jpg" alt="banner"></a>
+              <div class="text-center mb-5"><a class="btn btn-outline-primary" href="#"><i class="fas fa-angle-down me-2"></i>Load more</a></div>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">4</a></li>
+                  <li class="page-item"><a class="page-link" href="#">5</a></li>
+                  <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                </ul>
+              </nav>
             </div>
+            <!-- SHOP SIDEBAR-->
+            <div class="col-lg-3">
+              <!-- Categories-->
+              <h3 class="h4 lined text-uppercase mb-4">Categories</h3>
+              <ul class="nav flex-column nav-pills mb-4">
+                <li class="nav-item"><a class="nav-link" href="health.html">
+                    <div class="d-flex align-items-center justify-content-between"><span class="fw-bold text-uppercase">Men</span>
+                      <div class="badge bg-secondary">42</div>
+                    </div></a>
+                  <ul class="list-unstyled text-sm text-muted mb-0">
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">T-shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Pants</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Accessories</span></a></li>
+                  </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link active" href="health.html">
+                    <div class="d-flex align-items-center justify-content-between"><span class="fw-bold text-uppercase">Ladies</span>
+                      <div class="badge bg-white text-primary">123</div>
+                    </div></a>
+                  <ul class="list-unstyled text-sm text-muted mb-0">
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">T-shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Pants</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Accessories</span></a></li>
+                  </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="health.html">
+                    <div class="d-flex align-items-center justify-content-between"><span class="fw-bold text-uppercase">Kds</span>
+                      <div class="badge bg-secondary">11</div>
+                    </div></a>
+                  <ul class="list-unstyled text-sm text-muted mb-0">
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">T-shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Shirts</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Pants</span></a></li>
+                    <li><a class="nav-link ps-4 text-muted letter-spacing-1" href="health.html"> <span class="ps-2">Accessories</span></a></li>
+                  </ul>
+                </li>
+              </ul>
+              <!-- Brands        -->
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h4 lined text-uppercase">Brands</h3>
+                <button class="btn btn-sm btn-danger" type="button"><i class="fas fa-times-circle me-2"></i>Clear</button>
+              </div>
+              <form class="mb-4" action="#">
+                <div class="form-check">
+                  <input class="form-check-input" id="armani" type="checkbox">
+                  <label class="ps-2 form-check-label" for="armani">Armani (10)</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="versace" type="checkbox">
+                  <label class="ps-2 form-check-label" for="versace">Versace (12)</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="carloBruni" type="checkbox">
+                  <label class="ps-2 form-check-label" for="carloBruni">Carlo Bruni (15)</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="jackHoney" type="checkbox">
+                  <label class="ps-2 form-check-label" for="jackHoney">Jack Honey (14)</label>
+                </div>
+                <button class="btn btn-sm btn-outline-primary mt-3" type="button"><i class="fas fa-pencil-alt me-2"></i>Apply</button>
+              </form>
+              <!-- Colors-->
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h4 lined text-uppercase">Colors</h3>
+                <button class="btn btn-sm btn-danger" type="button"><i class="fas fa-times-circle me-2"></i>Clear</button>
+              </div>
+              <form class="mb-4" action="#">
+                <div class="form-check">
+                  <input class="form-check-input" id="colorWhite" type="checkbox">
+                  <label class="ps-2 form-check-label d-flex align-items-center" for="colorWhite"> <span class="color-box me-2 bg-white"></span><span>White</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="colorBlue" type="checkbox">
+                  <label class="ps-2 form-check-label d-flex align-items-center" for="colorBlue"> <span class="color-box me-2 bg-info"></span><span>Blue</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="colorGreen" type="checkbox">
+                  <label class="ps-2 form-check-label d-flex align-items-center" for="colorGreen"> <span class="color-box me-2 bg-success"></span><span>Green</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="colorYellow" type="checkbox">
+                  <label class="ps-2 form-check-label d-flex align-items-center" for="colorYellow"> <span class="color-box me-2 bg-warning"></span><span>Yellow</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" id="colorRed" type="checkbox">
+                  <label class="ps-2 form-check-label d-flex align-items-center" for="colorRed"> <span class="color-box me-2 bg-danger"></span><span>Red</span></label>
+                </div>
+                <button class="btn btn-sm btn-outline-primary mt-3" type="button"><i class="fas fa-pencil-alt me-2"></i>Apply</button>
+              </form><a class="d-inline-block" href="#"><img class="img-fluid" src="img/banner.jpg" alt=""></a>
+            </div>
+          </div>
         </div>
-    </section>
-</main>
-<th:block th:replace ="fragments/footer"></th:block>
+      </section>
+      <!-- GET IT-->
+      <div class="bg-primary py-5 text-white">
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 p-3">
+              <h3 class="text-uppercase mb-0">Do you want cool website like this one?</h3>
+            </div>
+            <div class="col-lg-4 p-3">   <a class="btn btn-outline-light" href="#">Buy this template now</a></div>
+          </div>
+        </div>
+      </div>
+      <th:block th:replace ="fragments/footer"></th:block>
+    </div>
+    <th:block th:replace="fragments/bootstrap4"></th:block>
 
-
-</body>
+  </body>
 </html>
