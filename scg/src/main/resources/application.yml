@@ -29,17 +29,23 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/**
           filters:
-            - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-#            - AuthorizationHeaderFilter
+
         - id: frontend
           uri: lb://FRONTEND
           predicates:
             - Path=/view/**
           filters:
-            - RemoveRequestHeader=Cookie
             - RewritePath=/view/(?<segment>.*), /$\{segment}
 #            - AuthorizationHeaderFilter
         - id: catalog-service
@@ -47,7 +53,6 @@ spring:
           predicates:
             - Path=/catalog-service/**
           filters:
-            - RemoveRequestHeader=Cookie
             - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
       #            - AuthorizationHeaderFilter
 
@@ -57,3 +62,7 @@ management:
     web:
       exposure:
         include: refresh, health, beans, info, httptrace, busrefresh, metrics, prometheus
+
+token:
+  secret: testKey
+  expiration_time: 86400000

@@ -7,6 +7,60 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
+    <script>
+      function init(){
+        console.log("health Page")
+        getProducts();
+      }
+
+      function getProducts(){
+
+        let data = {};
+
+        $.ajax({
+          type: 'get'
+          , async: true
+          , url: '/catalog-service/catalogs'
+          ,dataType : "json"
+          ,contentType: "application/json; charset=utf-8"
+          , beforeSend: function() {
+          }
+          , success: function (ajaxData, status, request) {
+            drawList(ajaxData);
+          }
+          , error: function(request, status, err) {
+            console.log(status,request,err);
+
+          }
+          , complete: function(request, status) {
+
+          }
+        });
+      }
+
+      function drawList(productList){
+        let html='';
+        for (const product of productList) {
+          html += '<div class="col-lg-4 col-md-6" >\n' +
+                  '<div class="product h-100">\n' +
+                  '                    <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product1.jpg" alt="Fur coat with very but very very long name"></a></div>\n' +
+                  '                    <div class="py-4 px-3 text-center">\n' +
+                  '                      <h3 class="h5 text-uppercase mb-3"><a class="reset-link" href="shop-detail.html">'+product.productName+'</a></h3>\n' +
+                  '                      <p class="mb-0">'+product.unitPrice+'\n' +
+                  '                      </p>\n' +
+                  '                    </div>\n' +
+                  '                    <ul class="list-unstyled p-0 ribbon-holder mb-0">\n' +
+                  '                    </ul>\n' +
+                  '                  </div>\n' +
+                  '                </div>\n' +
+                  '                </div>' ;
+
+        }
+        $("#productsContainer").html(html);
+      }
+
+
+    </script>
 
   </head>
   <body>
@@ -19,13 +73,13 @@
               <div class="container py-3">
                 <div class="row d-flex align-items-center gy-4">
                   <div class="col-md-7">
-                    <h1 class="h2 mb-0 text-uppercase">Category with right sidebar</h1>
+                    <h1 class="h2 mb-0 text-uppercase">헬스 용품</h1>
                   </div>
                   <div class="col-md-5">
                     <!-- Breadcrumb-->
                     <ol class="text-sm justify-content-start justify-content-lg-end mb-0 breadcrumb undefined">
                       <li class="breadcrumb-item"><a class="text-uppercase" href="index.html">Home</a></li>
-                      <li class="breadcrumb-item text-uppercase active">Category with right sidebar      </li>
+                      <li class="breadcrumb-item text-uppercase active">Health products </li>
                     </ol>
                   </div>
                 </div>
@@ -38,8 +92,8 @@
             <!-- SHOP LISTING -->
             <div class="col-lg-9">
               <p class="text-muted lead text-center mb-5">In our Ladies department we offer wide selection of the best products we have found and carefully selected worldwide. Pellentesque habitant morbi tristique senectus et netuss.</p>
-              <div class="row gy-5 align-items-stretch">
-                <div class="col-lg-4 col-md-6">
+              <div class="row gy-5 align-items-stretch" id="productsContainer">
+                <div class="col-lg-4 col-md-6" >
                   <!-- Product-->
                   <div class="product h-100">
                     <div class="product-image"><a href="shop-detail.html"><img class="img-fluid" src="img/product1.jpg" alt="Fur coat with very but very very long name"></a></div>

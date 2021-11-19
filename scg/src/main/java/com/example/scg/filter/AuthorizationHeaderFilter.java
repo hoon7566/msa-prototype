@@ -7,6 +7,7 @@ import org.apache.http.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -37,12 +38,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) { // header에 AUTHORIZATION가 포함되어잇는지.
-                return onError(exchange, "No authorization haeder", HttpStatus.UNAUTHORIZED);
+            if(request.getCookies() ==null || request.getCookies().get("token").isEmpty()|| request.getCookies().get("token") ==null){
+                return onError(exchange, "No authorization cookie", HttpStatus.UNAUTHORIZED);
             }
-
-            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            String jwt = authorizationHeader.replace("Bearer" , ""); //
+            HttpCookie tokenCookie = request.getCookies().get("token").get(0);
+            String jwt = tokenCookie.getValue(); //
 
             if (!isJwtValid(jwt)){
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);

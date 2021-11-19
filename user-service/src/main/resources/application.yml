@@ -32,3 +32,6 @@ logging:
     org.hibernate.SQL: debug
 
 
+token:
+  secret: testKey
+  expiration_time: 86400000

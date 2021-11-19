@@ -6,13 +6,19 @@ import com.example.catalogservice.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -33,4 +39,23 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public UserDto getUserDtoByUserId(String userId){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
+        return userDto;
+
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+
+        UserEntity userEntity = userRepository.findByUserId(userId);
+
+        return new User(userEntity.getUserId(),userEntity.getEncryptedPwd(),
+                true,
+                true,
+                true,
+                true,
+                new ArrayList<>());
+    }
 }
