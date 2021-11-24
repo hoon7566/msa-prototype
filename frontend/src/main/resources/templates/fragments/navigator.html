@@ -5,7 +5,33 @@
     function initNavigator(){
         $("#btnLogin").click(function (){login();});
         $("#btnSignUp").click(function (){signUp();});
+        $(document).on("click","#btnLogout" , function (){logout()});
 
+    }
+
+    function logout(){
+        console.log("logout()")
+        $.ajax({
+            type: 'post'
+            , async: true
+            , url: '/user-service/removeToken'
+            ,dataType : "text"
+            , beforeSend: function(xhr) {
+                xhr.setRequestHeader("Content-type","application/json; charset=utf-8");
+            }
+            , success: function (ajaxData, status, request) {
+                console.log(ajaxData)
+                console.log(status)
+                console.log(request)
+            }
+            , error: function(request, status, err) {
+                console.log(status,request,err);
+
+            }
+            , complete: function(request, status) {
+
+            }
+        });
     }
 
     function login() {
@@ -24,6 +50,9 @@
                 xhr.setRequestHeader("Content-type","application/json; charset=utf-8");
             }
             , success: function (ajaxData, status, request) {
+                console.log(ajaxData)
+                console.log(status)
+                console.log(request)
                 alert("로그인 성공");
             }
             , error: function(request, status, err) {
@@ -35,8 +64,24 @@
 
             }
         });
+    }
 
-
+    function changeNav() {
+        console.log(userInfo)
+        let html =
+            '<li class="list-inline-item">' +
+            '<a class="text-xs text-uppercase fw-bold text-reset" href="#" >' +
+                '<i class="fas fa-door-open me-2"></i>' +
+                '<span class="d-none d-md-inline-block">'+userInfo.userId+'</span>' +
+                '</a>' +
+            '</li>'+
+            '<li class="list-inline-item">' +
+            '<a id="btnLogout" class="text-xs text-uppercase fw-bold text-reset" href="#" >' +
+            '<i class="fas fa-door-open me-2"></i>' +
+            '<span class="d-none d-md-inline-block">Log out</span>' +
+            '</a>' +
+            '</li>';
+        $("#infoDiv").html(html);
 
     }
 
@@ -79,7 +124,7 @@
                 <p class="mb-0 text-xs">Contact us on +420 777 555 333 or hello@universal.com.</p>
             </div>
             <div class="col-md-6">
-                <div class="d-flex justify-content-md-end justify-content-between">
+                <div id="infoDiv" class="d-flex justify-content-md-end justify-content-between">
                     <ul class="list-inline d-block d-md-none mb-0">
                         <li class="list-inline-item"><a class="text-xs" href="#"><i class="fa fa-phone"></i></a></li>
                         <li class="list-inline-item"><a class="text-xs" href="#"><i class="fa fa-envelope"></i></a></li>

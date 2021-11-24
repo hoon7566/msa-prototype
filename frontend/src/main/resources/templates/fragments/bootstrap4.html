@@ -61,7 +61,11 @@
 
 </script>
 <script>
+    console.log(document.cookie)
     $(document).ready(function() {
+
+        let userId;
+        loginByCookie();
         initNavigator();
         init();
     })

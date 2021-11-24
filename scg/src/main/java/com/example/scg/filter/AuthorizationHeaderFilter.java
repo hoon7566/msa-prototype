@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.netty.handler.codec.http.cookie.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
@@ -21,6 +22,7 @@ import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -35,7 +37,11 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,14 +54,16 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
     Environment env;
+    AtomicReference<HashSet<String>>  blackList;
 
     public static class Config{
 
     }
 
-    public AuthorizationHeaderFilter(Environment env) {
+    public AuthorizationHeaderFilter(Environment env,AtomicReference<HashSet<String>>  blackList) {
         super(Config.class);
         this.env = env;
+        this.blackList = blackList;
     }
 
     // login -> token -> users (with token) -> header(include token)
@@ -63,13 +71,30 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) { // header에 AUTHORIZATION가 포함되어잇는지.
+
+            HttpCookie jwtCookie =null;
+            try{
+                jwtCookie = request.getCookies().get("jwt").get(0);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+            if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && jwtCookie==null) { // header에 AUTHORIZATION가 포함되어잇는지.
                 return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
                 //return chain.filter(redirect(exchange, "No authorization header", HttpStatus.UNAUTHORIZED));
             }
+            String jwt = null;
+            try{
+                String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                 jwt = authorizationHeader.replace("Bearer" , "");
+            }catch (Exception e){
+                jwt = jwtCookie.getValue();
+            }
 
-            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            String jwt = authorizationHeader.replace("Bearer" , ""); //
+            if(blackList.get().contains(jwt)){
+                return onError(exchange, "만료된 JWT token ", HttpStatus.UNAUTHORIZED);
+            }
 
             if (!isJwtValid(jwt)){
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
@@ -77,22 +102,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             }
 
 
-            ServerHttpRequest mutatedRequest = exchange.getRequest().mutate().build();
+            ServerHttpRequest mutatedRequest = exchange.getRequest();
             String userId = Jwts.parser().setSigningKey(env.getProperty("token.secret"))
                     .parseClaimsJws(jwt).getBody().getSubject();
+            mutatedRequest.mutate().header("userId",userId);
+            mutatedRequest.getBody().contextWrite(ctx -> ctx.put("userId3","world"));
+            exchange.getSession().contextWrite(ctx -> ctx.put("userId3","world"));
 
-            exchange.getRequest().mutate().header("userId",userId);
-
-
-            {
-                mutatedRequest.getBody().contextWrite(ctx -> ctx.put("userId3","world"));
-                exchange.getSession().map(webSession -> webSession.getAttributes().put("userId","aaaa"));
-                exchange.getAttributes().put("userId2","aaaaaa");
-                exchange.mutate().build().getAttributes().put("userId2","aaaaaa");
-                exchange.getRequest().getBody().contextWrite(ctx -> ctx.put("userId3","world"));
-                exchange.getSession().contextWrite(ctx -> ctx.put("userId3","world"));
-                log.info(exchange.getAttribute("userId2"));
-            }
 
 
 

@@ -1,6 +1,7 @@
 package com.example.catalogservice.security;
 
 import com.example.catalogservice.dto.UserDto;
+import com.example.catalogservice.service.UserNotFoundException;
 import com.example.catalogservice.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
@@ -81,14 +82,19 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
 
         String userId = ((User)authResult.getPrincipal()).getUsername();
-        UserDto userDto = userService.getUserDtoByUserId(userId);
+        UserDto userDto = null;
+        try{
+            userDto = userService.getUserDtoByUserId(userId);
+        }catch (Exception e){
+
+        }
         String token = Jwts.builder()
                 .setSubject(userDto.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis()+
                         Long.parseLong(env.getProperty("token.expiration_time"))))
                 .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
                 .compact();
-        Cookie cookieToken = new Cookie("token",token);
+        Cookie cookieToken = new Cookie("jwt",token);
         //cookieToken.setHttpOnly(true);
         response.addCookie(cookieToken);
         response.setHeader("token",token);

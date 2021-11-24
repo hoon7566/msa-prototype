@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -39,8 +41,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public UserDto getUserDtoByUserId(String userId){
+    public UserDto getUserDtoByUserId(String userId) throws Exception {
         UserEntity userEntity = userRepository.findByUserId(userId);
+        if(userEntity ==null) throw new UserNotFoundException("User Not Found");
+
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
         return userDto;
 

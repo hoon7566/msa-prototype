@@ -4,6 +4,7 @@ import com.example.catalogservice.dto.ResponseUser;
 import com.example.catalogservice.dto.UserDto;
 import com.example.catalogservice.jpa.UserEntity;
 import com.example.catalogservice.service.UserService;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -13,14 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +39,7 @@ public class UserController {
     public String welcome(Model model, HttpSession session, HttpServletRequest request) throws IOException {
 
         log.info(String.format("userId = "+request.getHeader("userId")));
-        log.info(String.format("userId = "+request.getAttribute("userId2")));
+
         return String.format("It's Working in User Service"
                 +" Port (local.server.port) = " +env.getProperty("local.server.port")
                 +" Port (server.port) = " +env.getProperty("server.port")
@@ -44,36 +47,27 @@ public class UserController {
 
     }
 
-    public static String getBody(HttpServletRequest request) throws IOException {
+    @GetMapping("/token")
+    public ResponseEntity<ResponseUser> token(HttpServletRequest request) throws Exception {
 
-        String body = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
+        ResponseUser responseUser = new ModelMapper()
+                .map(   userService.getUserDtoByUserId(request.getHeader("userId"))
+                        ,  ResponseUser.class);
 
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
-            }
-        }
+        return ResponseEntity.ok().body(responseUser);
 
-        body = stringBuilder.toString();
-        return body;
+    }
+
+    @PostMapping("/removeToken")
+    public ResponseEntity token(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        Cookie delCookie = new Cookie("jwt","deleted");
+        delCookie.setMaxAge(0);
+        response.addCookie(delCookie);
+
+
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping("/users")
