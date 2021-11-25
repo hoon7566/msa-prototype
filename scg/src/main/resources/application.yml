@@ -77,7 +77,6 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-
         - id: frontend
           uri: lb://FRONTEND
           predicates:

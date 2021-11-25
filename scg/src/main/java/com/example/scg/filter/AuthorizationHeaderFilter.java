@@ -8,11 +8,14 @@ import io.netty.handler.codec.http.cookie.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
+import org.apache.http.NameValuePair;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.filter.factory.AbstractNameValueGatewayFilterFactory;
 import org.springframework.cloud.gateway.filter.factory.AddRequestParameterGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.cloud.gateway.support.GatewayToStringStyler;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -26,21 +29,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,6 +66,14 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         super(Config.class);
         this.env = env;
         this.blackList = blackList;
+    }
+    static class Pair{
+        String name;
+        String value;
+        public Pair(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
     }
 
     // login -> token -> users (with token) -> header(include token)
@@ -102,22 +112,42 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             }
 
 
-            ServerHttpRequest mutatedRequest = exchange.getRequest();
             String userId = Jwts.parser().setSigningKey(env.getProperty("token.secret"))
                     .parseClaimsJws(jwt).getBody().getSubject();
-            mutatedRequest.mutate().header("userId",userId);
-            mutatedRequest.getBody().contextWrite(ctx -> ctx.put("userId3","world"));
-            exchange.getSession().contextWrite(ctx -> ctx.put("userId3","world"));
+            //mutatedRequest.mutate().header("userId",userId);
+            List<Pair> configList = new ArrayList<>();
+            configList.add( new Pair("userId",userId));
+            URI newUri = AddParameter(exchange,configList);
 
 
-
-
-
+            ServerHttpRequest mutatedRequest = exchange.getRequest().mutate().uri(newUri).build();
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
+
 
 
         };
     }
+
+    private URI AddParameter(ServerWebExchange exchange, List<Pair> configList){
+        URI uri = exchange.getRequest().getURI();
+        StringBuilder query = new StringBuilder();
+        String originalQuery = uri.getRawQuery();
+        if (StringUtils.hasText(originalQuery)) {
+            query.append(originalQuery);
+            if (originalQuery.charAt(originalQuery.length() - 1) != '&') {
+                query.append('&');
+            }
+        }
+        configList.stream().forEach(pair -> {
+            String value = ServerWebExchangeUtils.expand(exchange, pair.value);
+            query.append(pair.name);
+            query.append('=');
+            query.append(value);
+        });
+
+        return UriComponentsBuilder.fromUri(uri).replaceQuery(query.toString()).build(true).toUri();
+    }
+
 
     private boolean isJwtValid(String jwt) {
         boolean returnValue = true;
@@ -146,6 +176,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         if(subject == null || subject.isEmpty()){
             returnValue= false;
         }
+
 
         return returnValue;
     }

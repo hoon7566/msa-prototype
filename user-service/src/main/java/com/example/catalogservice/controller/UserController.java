@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("/welcome")
     public String welcome(Model model, HttpSession session, HttpServletRequest request) throws IOException {
 
-        log.info(String.format("userId = "+request.getHeader("userId")));
+        log.info(String.format("userId = "+request.getParameter("userId")));
 
         return String.format("It's Working in User Service"
                 +" Port (local.server.port) = " +env.getProperty("local.server.port")
@@ -48,10 +48,10 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<ResponseUser> token(HttpServletRequest request) throws Exception {
+    public ResponseEntity<ResponseUser> token(HttpServletRequest request, @RequestParam String userId) throws Exception {
 
         ResponseUser responseUser = new ModelMapper()
-                .map(   userService.getUserDtoByUserId(request.getHeader("userId"))
+                .map(   userService.getUserDtoByUserId(userId)
                         ,  ResponseUser.class);
 
         return ResponseEntity.ok().body(responseUser);
