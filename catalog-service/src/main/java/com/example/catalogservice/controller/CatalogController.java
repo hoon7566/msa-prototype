@@ -33,7 +33,7 @@ public class CatalogController {
 
     }
 
-    @PostMapping("/catalogs")
+    @PostMapping("/orders")
     public ResponseEntity<CatalogDto> createCatalog(@RequestBody CatalogDto catalogDto){
 
         CatalogDto createCatalog = catalogService.createCatalog(catalogDto);
@@ -43,7 +43,7 @@ public class CatalogController {
 
     }
 
-    @GetMapping("/catalogs")
+    @GetMapping("/orders")
     public ResponseEntity<List<CatalogDto>> retrieveCatalogs(){
 
         Iterable<CatalogEntity> catalogs= catalogService.retrieveCatalog();
