@@ -1,5 +1,6 @@
 package com.example.scg.filter;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -11,14 +12,16 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
 
+public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
+    private static final String TEST_CIRCUIT_BREAKER = "testCircuitBreaker";
 
     public GlobalFilter(){
         super(Config.class);
     }
 
     @Override
+    @RateLimiter(name = TEST_CIRCUIT_BREAKER)
     public GatewayFilter apply(Config config) {
 
         return (exchange, chain) -> {

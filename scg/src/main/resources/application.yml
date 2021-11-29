@@ -35,6 +35,10 @@ spring:
             baseMessage: Spring Cloud Gateway Global Filter
             preLogger: true
             postLogger: true
+        - name: CircuitBreaker
+          args:
+            name: mycb
+
 
       routes:
         - id: user-service
@@ -90,7 +94,7 @@ spring:
             - Path=/catalog-service/**
           filters:
             - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
-      #            - AuthorizationHeaderFilter
+
 
 management:
   endpoint:
@@ -102,3 +106,16 @@ management:
 token:
   secret: testKey
   expiration_time: 86400000
+
+
+resilience4j.ratelimiter:
+  instances:
+    testCircuitBreaker:
+      limitForPeriod: 2
+      # limitRefreshPeriod 기간 동안 허용되는 요청 수
+      limitRefreshPeriod: 5000ns
+      # limit refresh 기간
+      timeoutDuration: 5s
+      # 허가를 위해 쓰레드가 대기하는 기본 시간
+      registerHealthIndicator: true
+
