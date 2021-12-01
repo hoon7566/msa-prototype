@@ -32,7 +32,6 @@ let loginByCookie = function (accessToken){
             //alert("로그인 성공");
         }
         , error: function(request, status, err) {
-            alert("로그인 실패");
             console.log(status,request,err);
 
         }

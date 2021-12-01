@@ -45,6 +45,7 @@ public class ScgTest {
                     .findFirst()
                     .orElse("aaaaa");
             stopWatch.stop();
+            System.out.println(test);
             System.out.println(stopWatch.getTotalTimeMillis());
         }
 

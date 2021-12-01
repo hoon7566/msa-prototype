@@ -2,6 +2,7 @@ package com.example.scg.config;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.common.ratelimiter.configuration.RateLimiterConfigCustomizer;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
@@ -48,22 +49,9 @@ public class Resilience4jConfig {
                 , "mycb");
     }
 
-    @Bean
-    @Primary
-    public Customizer<RateLimiterConfigurationProperties> myCD(){
-        RateLimiterConfig rateLimiterConfig = RateLimiterConfig.custom().limitForPeriod(10) // # limitRefreshPeriod 기간 동안 허용되는 요청 수
-                .limitRefreshPeriod(Duration.ofMillis(20000))
-                .timeoutDuration(Duration.ofMillis(20000)).build();
 
-        return rateLimiterConfigurationProperties -> rateLimiterConfigurationProperties.setRateLimiterAspectOrder(1);
-    }
 
-    @Bean
-    public RateLimiterConfig myRateLimiterConfig(){
-        RateLimiterConfig rateLimiterConfig = RateLimiterConfig.custom().limitForPeriod(10) // # limitRefreshPeriod 기간 동안 허용되는 요청 수
-                .limitRefreshPeriod(Duration.ofMillis(20000))
-                .timeoutDuration(Duration.ofMillis(20000)).build();
 
-        return rateLimiterConfig;
-    }
+
+
 }

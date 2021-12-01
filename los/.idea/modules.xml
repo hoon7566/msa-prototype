@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/../catalog-service/catalog-service.iml" filepath="$PROJECT_DIR$/../catalog-service/catalog-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/../eureka-server/eureka-server.iml" filepath="$PROJECT_DIR$/../eureka-server/eureka-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/../order-service/order-service.iml" filepath="$PROJECT_DIR$/../order-service/order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../payment-service/payment-service.iml" filepath="$PROJECT_DIR$/../payment-service/payment-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/../scg/scg.iml" filepath="$PROJECT_DIR$/../scg/scg.iml" />
       <module fileurl="file://$PROJECT_DIR$/../user-service/user-service.iml" filepath="$PROJECT_DIR$/../user-service/user-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/../frontend/web-front.iml" filepath="$PROJECT_DIR$/../frontend/web-front.iml" />

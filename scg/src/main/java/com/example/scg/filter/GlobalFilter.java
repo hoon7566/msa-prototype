@@ -21,9 +21,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
     }
 
     @Override
-    @RateLimiter(name = TEST_CIRCUIT_BREAKER)
     public GatewayFilter apply(Config config) {
-
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest(); // reactive포함된거로 import
             ServerHttpResponse response = exchange.getResponse();

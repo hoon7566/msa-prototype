@@ -1,4 +1,2 @@
-insert into catalog(id, product_name,stock,unit_price) values(9995, '단백질보충제' , 500, 1500)
-insert into catalog(id, product_name,stock,unit_price) values(9996, '텀블러' , 110, 400)
-insert into catalog(id, product_name,stock,unit_price) values(9997, '반 장갑' , 200, 800)
-insert into catalog(id, product_name,stock,unit_price) values(9998, '덤벨' , 940, 3500)
+insert into orders(order_id, product_id, qty,user_id,order_time,total_price, payment_yn,delivery_yn) values(100001, 9999 ,5,'hoon7566',sysdate,350000,'N','N' );
+insert into orders(order_id, product_id, qty,user_id,order_time,total_price, payment_yn,delivery_yn) values(100002, 1000 ,3,'hoon7566',sysdate,50000,'N','N' );

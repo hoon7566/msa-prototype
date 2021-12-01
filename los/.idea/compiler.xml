@@ -7,18 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="user-service" />
-        <module name="order-service" />
+        <module name="payment-service" />
         <module name="web-front" />
-        <module name="eureka-server" />
         <module name="scg" />
         <module name="catalog-service" />
+        <module name="user-service" />
+        <module name="order-service" />
+        <module name="eureka-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="catalog-service" target="1.8" />
       <module name="eureka-server" target="1.8" />
       <module name="order-service" target="1.8" />
+      <module name="payment-service" target="1.8" />
       <module name="scg" target="1.8" />
       <module name="user-service" target="1.8" />
       <module name="web-front" target="1.8" />
@@ -29,6 +31,7 @@
       <module name="catalog-service" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="order-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
       <module name="scg" options="-parameters" />
       <module name="user-service" options="-parameters" />
       <module name="web-front" options="-parameters" />

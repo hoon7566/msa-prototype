@@ -1,0 +1,1 @@
+insert into payments(payment_id, order_id, price, error_yn,created_at) values(100001, 9999 ,35000,'Y',sysdate );

@@ -41,39 +41,21 @@ spring:
 
 
       routes:
+        ####################### FRONT ##################
+        - id: frontend
+          uri: lb://FRONTEND
+          predicates:
+            - Path=/view/**
+          filters:
+            - RewritePath=/view/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/token
+            - Path=/user-service/users, /user-service/removeToken, /user-service/login
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
-#        - id: user-service
-#          uri: lb://USER-SERVICE
-#          predicates:
-#            - Path=/user-service/login
-#            - Method=POST
-#          filters:
-#            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/user-service/users
-          filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/user-service/removeToken
-          filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/user-service/login
-          filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-
+        ####################### FRONT ##################
+        ####################### USER(AUTH)-SERVICE(LOGIN,SIGN UP, TOKEN GEN) ##################
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -81,19 +63,33 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: frontend
-          uri: lb://FRONTEND
-          predicates:
-            - Path=/view/**
-          filters:
-            - RewritePath=/view/(?<segment>.*), /$\{segment}
-#            - AuthorizationHeaderFilter
+        #########################################
+        ####################### CATALOG-SERVICE ##################
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/catalog-service/**
           filters:
             - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
+        ####################### CATALOG-SERVICE ##################
+        ####################### ORDER-SERVICE ##################
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+          filters:
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        ####################### ORDER-SERVICE ##################
+        ####################### PAYMENT-SERVICE ##################
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment-service/**
+          filters:
+            - RewritePath=/payment-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        ####################### PAYMENT-SERVICE ##################
 
 
 management:
