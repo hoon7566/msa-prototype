@@ -2,13 +2,15 @@ package com.example.orderservice.service;
 
 import com.example.orderservice.client.PaymentServiceClient;
 import com.example.orderservice.dto.OrderDto;
-import com.example.orderservice.jpa.OrderEntity;
-import com.example.orderservice.jpa.OrderRepository;
+import com.example.orderservice.react.Orders;
+import com.example.orderservice.react.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -23,24 +25,19 @@ public class OrderService {
     private final PaymentServiceClient paymentServiceClient;
 
 
-    public OrderEntity createOrder(OrderDto orderDto){
+    public Mono<Orders> createOrder(OrderDto orderDto){
 
-        OrderEntity orderEntity = modelMapper.map(orderDto, OrderEntity.class);
-        orderEntity.setTotalPrice(orderDto.getUnitPrice() * orderDto.getQty());
-        orderEntity.setOrderTime(LocalDateTime.now());
-        orderEntity.setPaymentYn("N");
-        orderEntity.setDeliveryYn("N");
-        OrderEntity createOrderEntity = orderRepository.save(orderEntity);
+        Orders order = modelMapper.map(orderDto, Orders.class);
+        order.setTotalPrice(orderDto.getUnitPrice() * orderDto.getQty());
+        order.setOrderTime(LocalDateTime.now());
+        order.setPaymentYn("N");
+        order.setDeliveryYn("N");
+        Mono<Orders> createOrder = orderRepository.save(order);
 
-        //PAYMENT 호출
-        Object result = paymentServiceClient.createPayment(orderEntity.getOrderId());
-
-        //DELIVERY 호출
-
-        return createOrderEntity;
+        return createOrder;
     }
 
-    public Iterable<OrderEntity> retrieveOrder(){
+    public Flux<Orders> retrieveOrder(){
         return orderRepository.findAll();
     }
 
