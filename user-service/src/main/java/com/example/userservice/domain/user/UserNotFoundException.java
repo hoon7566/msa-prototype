@@ -1,4 +1,4 @@
-package com.example.userservice.service;
+package com.example.userservice.domain.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

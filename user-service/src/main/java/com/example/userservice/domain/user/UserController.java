@@ -1,10 +1,6 @@
-package com.example.userservice.controller;
+package com.example.userservice.domain.user;
 
-import com.example.userservice.dto.ResponseUser;
-import com.example.userservice.dto.UserDto;
-import com.example.userservice.jpa.UserEntity;
-import com.example.userservice.service.UserService;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
@@ -19,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,12 +24,23 @@ import java.util.List;
 @RequestMapping("/")
 public class UserController {
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    static class ResponseUser {
+        private String userId;
+        private String name;
+        private Date createdAt;
+    }
+
+
     private final Environment env;
     private final UserService userService;
     private final ModelMapper modelMapper;
 
     @GetMapping("/welcome")
-    public String welcome(Model model, HttpSession session, HttpServletRequest request) throws IOException {
+    public String welcome(HttpServletRequest request) {
 
         log.info(String.format("userId = "+request.getParameter("userId")));
 
@@ -46,7 +54,7 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<ResponseUser> token(HttpServletRequest request, @RequestParam String userId) throws Exception {
 
-        ResponseUser responseUser = new ModelMapper()
+        ResponseUser responseUser = modelMapper
                 .map(   userService.getUserDtoByUserId(userId)
                         ,  ResponseUser.class);
 
@@ -61,7 +69,6 @@ public class UserController {
         delCookie.setMaxAge(0);
         response.addCookie(delCookie);
 
-
         return ResponseEntity.ok().build();
 
     }
@@ -69,7 +76,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<ResponseUser> createUser(@RequestBody UserDto userDto){
 
-        UserDto createUser = userService.createUser(userDto);
+        UserEntity createUser = userService.createUser(userDto);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(createUser,ResponseUser.class));
@@ -88,4 +95,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userList);
 
     }
+
+    @PutMapping("/users")
+    public ResponseEntity updateUser(@RequestBody UserDto userDto){
+
+        userService.updateUser(userDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity deleteUser(@RequestBody UserDto userDto){
+
+        userService.deleteUser(userDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
 }

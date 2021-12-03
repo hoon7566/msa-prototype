@@ -1,4 +1,4 @@
-package com.example.userservice.jpa;
+package com.example.userservice.user.jpa;
 
 
 import lombok.Data;
@@ -7,19 +7,21 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "users")
-public class UserEntity {
+@Table(name = "catalog")
+public class CatalogEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Id
     private Long id;
 
     @Column(nullable = false , length = 50, unique = true)
-    private String userId;
+    private String productName;
 
     @Column(nullable = false , length = 50)
-    private String name;
+    private Integer stock;
 
-    private String encryptedPwd;
+    @Column(nullable = false , length = 50)
+    private Integer unitPrice;
+
 
 }
 

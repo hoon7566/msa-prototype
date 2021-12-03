@@ -1,8 +1,8 @@
-package com.example.userservice.service;
+package com.example.userservice.user.service;
 
-import com.example.userservice.dto.CatalogDto;
-import com.example.userservice.jpa.CatalogEntity;
-import com.example.userservice.jpa.CatalogRepository;
+import com.example.userservice.user.dto.CatalogDto;
+import com.example.userservice.user.jpa.CatalogEntity;
+import com.example.userservice.user.jpa.CatalogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

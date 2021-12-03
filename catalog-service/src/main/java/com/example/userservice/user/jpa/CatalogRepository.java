@@ -1,4 +1,4 @@
-package com.example.userservice.jpa;
+package com.example.userservice.user.jpa;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

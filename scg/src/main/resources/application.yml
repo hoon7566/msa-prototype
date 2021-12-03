@@ -48,14 +48,21 @@ spring:
             - Path=/view/**
           filters:
             - RewritePath=/view/(?<segment>.*), /$\{segment}
+        ####################### FRONT ##################
+        ####################### USER(AUTH)-SERVICE(LOGIN,SIGN UP, TOKEN GEN) ##################
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/users, /user-service/removeToken, /user-service/login
+            - Path=/user-service/removeToken, /user-service/login
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        ####################### FRONT ##################
-        ####################### USER(AUTH)-SERVICE(LOGIN,SIGN UP, TOKEN GEN) ##################
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=GET,POST
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:

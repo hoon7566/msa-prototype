@@ -1,6 +1,6 @@
-package com.example.userservice.security;
+package com.example.userservice.framework.security;
 
-import com.example.userservice.service.UserService;
+import com.example.userservice.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;

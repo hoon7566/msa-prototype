@@ -1,4 +1,4 @@
-package com.example.userservice.config;
+package com.example.userservice.framework.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

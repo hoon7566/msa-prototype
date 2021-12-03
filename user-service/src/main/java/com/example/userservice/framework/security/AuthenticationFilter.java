@@ -1,7 +1,8 @@
-package com.example.userservice.security;
+package com.example.userservice.framework.security;
 
-import com.example.userservice.dto.UserDto;
-import com.example.userservice.service.UserService;
+import com.example.userservice.domain.user.UserDto;
+import com.example.userservice.domain.user.UserEntity;
+import com.example.userservice.domain.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -78,14 +79,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
 
         String userId = ((User)authResult.getPrincipal()).getUsername();
-        UserDto userDto = null;
-        try{
-            userDto = userService.getUserDtoByUserId(userId);
-        }catch (Exception e){
+        UserEntity userEntity = userService.getUserDtoByUserId(userId);
 
-        }
         String token = Jwts.builder()
-                .setSubject(userDto.getUserId())
+                .setSubject(userEntity.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis()+
                         Long.parseLong(env.getProperty("token.expiration_time"))))
                 .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
@@ -94,6 +91,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         //cookieToken.setHttpOnly(true);
         response.addCookie(cookieToken);
         response.setHeader("token",token);
-        response.setHeader("userId",userDto.getUserId());
+        response.setHeader("userId",userEntity.getUserId());
     }
 }
