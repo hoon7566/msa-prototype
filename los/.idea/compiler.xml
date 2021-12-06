@@ -11,8 +11,8 @@
         <module name="web-front" />
         <module name="scg" />
         <module name="catalog-service" />
-        <module name="user-service" />
         <module name="order-service" />
+        <module name="user-service" />
         <module name="eureka-server" />
       </profile>
     </annotationProcessing>

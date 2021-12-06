@@ -3,6 +3,7 @@ package com.example.userservice.domain.user;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +25,6 @@ import java.util.List;
 @RequestMapping("/")
 public class UserController {
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    static class ResponseUser {
-        private String userId;
-        private String name;
-        private Date createdAt;
-    }
-
 
     private final Environment env;
     private final UserService userService;
@@ -54,9 +45,7 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<ResponseUser> token(HttpServletRequest request, @RequestParam String userId) throws Exception {
 
-        ResponseUser responseUser = modelMapper
-                .map(   userService.getUserDtoByUserId(userId)
-                        ,  ResponseUser.class);
+        ResponseUser responseUser = new ResponseUser(userService.getUserDtoByUserId(userId));
 
         return ResponseEntity.ok().body(responseUser);
 
@@ -74,40 +63,71 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ResponseUser> createUser(@RequestBody UserDto userDto){
-
-        UserEntity createUser = userService.createUser(userDto);
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(createUser,ResponseUser.class));
-
+    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser){
+        UserDto userDto = new UserDto(requestUser);
+        UserDto createUser = userService.createUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseUser(createUser));
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<ResponseUser>> retrieveUser(){
+    public ResponseEntity<Result> retrieveUser(){
 
-        Iterable<UserEntity> users= userService.retrieveUser();
-
+        List<UserDto> users= userService.retrieveUser();
         List<ResponseUser> userList = new ArrayList<>();
-
-        users.forEach(e -> userList.add(modelMapper.map(e,ResponseUser.class)));
-
-        return ResponseEntity.status(HttpStatus.OK).body(userList);
+        users.forEach(e -> userList.add(new ResponseUser(e)));
+        Result<List<ResponseUser>> result = new Result<>(userList.size(),userList);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
 
     }
 
     @PutMapping("/users")
-    public ResponseEntity updateUser(@RequestBody UserDto userDto){
-
-        userService.updateUser(userDto);
+    public ResponseEntity updateUser(@RequestBody RequestUser requestUser){
+        userService.updateUser(new UserDto(requestUser));
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity deleteUser(@RequestBody UserDto userDto){
-
-        userService.deleteUser(userDto);
+    public ResponseEntity deleteUser(@RequestBody RequestUser requestUser){
+        userService.deleteUser(new UserDto(requestUser));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    static class ResponseUser  {
+        private String userId;
+        private String name;
+        private Date createdAt;
+
+        public ResponseUser ( UserDto userDto){
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            modelMapper.map(userDto , this);
+        }
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    static class RequestUser {
+        private String userId;
+        private String name;
+        private String password;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data;
     }
 
 

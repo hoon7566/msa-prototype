@@ -11,7 +11,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,29 +25,33 @@ public class UserService implements UserDetailsService {
     private final ModelMapper modelMapper;
 
 
-    public UserEntity createUser(UserDto userDto){
+    public UserDto createUser(UserDto userDto){
 
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
         userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
 
         UserEntity createUserEntity = userRepository.save(userEntity);
 
-        return createUserEntity;
+        return new UserDto(createUserEntity);
     }
 
-    public Iterable<UserEntity> retrieveUser(){
-        return userRepository.findAll();
+    public List<UserDto> retrieveUser(){
+        return userRepository.findAll()
+                .stream()
+                .map(e->new UserDto(e))
+                .collect(Collectors.toList());
     }
 
-    public UserEntity getUserDtoByUserId(String userId)  {
-        return userRepository.findByUserId(userId).orElseThrow( () -> new UserNotFoundException("사용자 없음. "+ userId ));
+    public UserDto getUserDtoByUserId(String userId)  {
+        return userRepository.findByUserId(userId)
+                .map(e->new UserDto(e))
+                .orElseThrow( () -> new UserNotFoundException("사용자 없음. "+ userId ));
     }
 
     public void updateUser(UserDto userDto){
         UserEntity userEntity = userRepository.findByUserId(userDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("사용자 없음. "+ userDto.getUserId()));
         userEntity.setName(userDto.getName());
-        userRepository.save(userEntity);
     }
 
     public void deleteUser(UserDto userDto){
@@ -64,6 +70,7 @@ public class UserService implements UserDetailsService {
                 true,
                 true,
                 true,
-                new ArrayList<>());}).orElseThrow( ()-> new UserNotFoundException("사용자없음: " + userId));
+                new ArrayList<>());})
+                .orElseThrow( ()-> new UserNotFoundException("사용자없음: " + userId));
     }
 }

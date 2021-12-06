@@ -79,10 +79,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
 
         String userId = ((User)authResult.getPrincipal()).getUsername();
-        UserEntity userEntity = userService.getUserDtoByUserId(userId);
+        UserDto userDto = userService.getUserDtoByUserId(userId);
 
         String token = Jwts.builder()
-                .setSubject(userEntity.getUserId())
+                .setSubject(userDto.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis()+
                         Long.parseLong(env.getProperty("token.expiration_time"))))
                 .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
@@ -91,6 +91,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         //cookieToken.setHttpOnly(true);
         response.addCookie(cookieToken);
         response.setHeader("token",token);
-        response.setHeader("userId",userEntity.getUserId());
+        response.setHeader("userId",userDto.getUserId());
     }
 }
