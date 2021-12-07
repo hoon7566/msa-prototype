@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
     public void updateUser(UserDto userDto){
         UserEntity userEntity = userRepository.findByUserId(userDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("사용자 없음. "+ userDto.getUserId()));
-        userEntity.setName(userDto.getName());
+        userEntity.modifyName(userDto.getName());
     }
 
     public void deleteUser(UserDto userDto){

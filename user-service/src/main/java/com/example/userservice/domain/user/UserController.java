@@ -28,7 +28,6 @@ public class UserController {
 
     private final Environment env;
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/welcome")
     public String welcome(HttpServletRequest request) {
@@ -65,8 +64,8 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser){
         UserDto userDto = new UserDto(requestUser);
-        UserDto createUser = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseUser(createUser));
+        UserDto createdUser = userService.createUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseUser(createdUser));
     }
 
     @GetMapping("/users")

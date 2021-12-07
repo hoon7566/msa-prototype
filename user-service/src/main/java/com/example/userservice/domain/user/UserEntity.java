@@ -24,5 +24,9 @@ public class UserEntity {
 
     //TODO:JPA Auddit 사용하여 등록자,수정자 넣어보기
 
+    public void modifyName(String name) {
+        this.name = name;
+    }
+
 }
 
