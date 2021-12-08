@@ -98,7 +98,7 @@ public class UserController {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    static class ResponseUser  {
+    public static class ResponseUser  {
         private String userId;
         private String name;
         private Date createdAt;
@@ -115,7 +115,7 @@ public class UserController {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    static class RequestUser {
+    public static class RequestUser {
         private String userId;
         private String name;
         private String password;
@@ -124,7 +124,7 @@ public class UserController {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    static class Result<T> {
+    public static class Result<T> {
         private int count;
         private T data;
     }

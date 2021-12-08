@@ -1,4 +1,4 @@
-package com.example.orderservice.react;
+package com.example.orderservice.domain.order;
 
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;

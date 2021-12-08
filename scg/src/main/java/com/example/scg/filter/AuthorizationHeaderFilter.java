@@ -35,12 +35,15 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.ServerWebExchangeDecorator;
 import org.springframework.web.server.WebSession;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -86,7 +89,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             try{
                 jwtCookie = request.getCookies().get("jwt").get(0);
             }catch (Exception e){
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
 
@@ -121,6 +124,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
 
             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate().uri(newUri).build();
+
+            //body 데이터 읽기
+            //mutatedRequest.getBody()
+            // .map(a->a.toString(Charset.forName("UTF-8")))
+            // .subscribe(System.out::println);
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
 
 

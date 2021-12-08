@@ -1,7 +1,8 @@
 package com.example.orderservice.service;
 
-import com.example.orderservice.dto.OrderDto;
-import com.example.orderservice.react.Orders;
+import com.example.orderservice.applicaion.OrderService;
+import com.example.orderservice.interfaces.common.OrderDto;
+import com.example.orderservice.domain.order.Orders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class OrderServiceTest {
                 .qty(10)
                 .unitPrice(1500)
                 .build();
-        Mono<Orders> orderMono =  orderService.createOrder(orderDto);
+        Mono<OrderDto> orderMono =  orderService.createOrder(orderDto);
 
         StepVerifier.create(orderMono)
                 .assertNext(it ->{

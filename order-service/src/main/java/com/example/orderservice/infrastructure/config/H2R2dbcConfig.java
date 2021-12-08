@@ -1,4 +1,4 @@
-package com.example.orderservice.config;
+package com.example.orderservice.infrastructure.config;
 
 
 import io.r2dbc.h2.H2ConnectionConfiguration;

@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,16 +20,16 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
 
 
     public UserDto createUser(UserDto userDto){
 
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+        UserEntity userEntity = new UserEntity(userDto);
         userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
 
         UserEntity createUserEntity = userRepository.save(userEntity);
@@ -35,6 +37,7 @@ public class UserService implements UserDetailsService {
         return new UserDto(createUserEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<UserDto> retrieveUser(){
         return userRepository.findAll()
                 .stream()
@@ -42,6 +45,7 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserDto getUserDtoByUserId(String userId)  {
         return userRepository.findByUserId(userId)
                 .map(e->new UserDto(e))
@@ -62,6 +66,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userId)  {
 
         return userRepository.findByUserId(userId)
