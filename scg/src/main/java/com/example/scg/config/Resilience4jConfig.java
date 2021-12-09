@@ -42,7 +42,8 @@ public class Resilience4jConfig {
                 .timeoutDuration(Duration.ofSeconds(4))
                 .build();
 
-        return factory -> factory.configure(builder -> builder
+        return factory ->
+                factory.configure(builder -> builder
                 .circuitBreakerConfig(config)
                 .timeLimiterConfig(timeLimiterConfig)
                 .build()

@@ -1,4 +1,4 @@
-package com.example.userservice.user.dto;
+package com.example.catalogservice.domain.catalog;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

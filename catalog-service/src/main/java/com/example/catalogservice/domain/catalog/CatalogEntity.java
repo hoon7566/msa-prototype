@@ -1,4 +1,4 @@
-package com.example.userservice.user.jpa;
+package com.example.catalogservice.domain.catalog;
 
 
 import lombok.Data;

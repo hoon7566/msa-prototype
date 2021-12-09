@@ -21,10 +21,15 @@ import java.time.LocalDateTime;
 @Builder
 public class OrderDto {
 
+    private Long orderId;
     private Long productId;
     private Integer qty;
     private String userId;
     private Integer unitPrice;
+    private Integer totalPrice;
+    private LocalDateTime orderTime;
+    private String paymentYn;
+    private String deliveryYn;
 
 
     public OrderDto(OrderController.RequestOrder requestOrder){
