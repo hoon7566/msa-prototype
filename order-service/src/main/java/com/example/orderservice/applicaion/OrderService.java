@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderSender orderSender;
 
 
     public Mono<OrderDto> createOrder(OrderDto orderDto){
@@ -30,11 +31,15 @@ public class OrderService {
         order.setOrderTime(LocalDateTime.now());
         order.setPaymentYn("N");
         order.setDeliveryYn("N");
-        Mono<Orders> createOrder = orderRepository.save(order);
-        //TODO: kafka로 order전송
+        Mono<OrderDto> createOrder = orderRepository.save(order)
+                .map(orders -> {
+                    OrderDto createOrderDto = new OrderDto(orders);
+                    //kafka로 order전송
+                    orderSender.send("orders",createOrderDto);
+                    return new OrderDto(orders);
+                });
 
-
-        return createOrder.map(orders -> new OrderDto(orders));
+        return createOrder;
     }
 
     @Transactional(readOnly = true)

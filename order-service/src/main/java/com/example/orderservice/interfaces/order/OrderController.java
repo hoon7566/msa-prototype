@@ -39,7 +39,7 @@ public class OrderController {
 
     @PostMapping(value = "/orders")
 
-    public Mono<ResponseEntity<ResponseOrder>> createOrderReact(@RequestBody RequestOrder requestOrder, @RequestParam String userId) throws IOException, URISyntaxException {
+    public Mono<ResponseEntity<ResponseOrder>> createOrder(@RequestBody RequestOrder requestOrder, @RequestParam String userId) throws IOException, URISyntaxException {
         requestOrder.setUserId(userId);
         OrderDto orderDto = new OrderDto(requestOrder);
         Mono<ResponseOrder> createOrder = orderService.createOrder(orderDto)
