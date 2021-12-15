@@ -1,8 +1,8 @@
-package com.example.paymentservice.controller;
+package com.example.paymentservice.interfaces.payment;
 
-import com.example.paymentservice.dto.PaymentDto;
-import com.example.paymentservice.jpa.PaymentEntity;
-import com.example.paymentservice.service.PaymentService;
+import com.example.paymentservice.interfaces.common.PaymentDto;
+import com.example.paymentservice.domain.payment.PaymentEntity;
+import com.example.paymentservice.domain.payment.PaymentService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -11,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

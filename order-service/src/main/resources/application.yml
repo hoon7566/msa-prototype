@@ -35,4 +35,7 @@ logging:
     com.example.userservice: DEBUG
     org.hibernate.SQL: debug
 
+topic:
+  order:
+    create: "order-create"
 

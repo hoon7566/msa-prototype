@@ -1,7 +1,10 @@
-package com.example.paymentservice.jpa;
+package com.example.paymentservice.domain.payment;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +12,9 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "payments")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Id
@@ -18,7 +24,7 @@ public class PaymentEntity {
     private Long orderId;
 
     @Column(nullable = false , length = 50)
-    private Integer price;
+    private Long price;
 
     @Column(nullable = false , length = 50)
     private String errorYn;

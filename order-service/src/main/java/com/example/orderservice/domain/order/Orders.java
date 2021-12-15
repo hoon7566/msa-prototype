@@ -27,6 +27,11 @@ public class Orders {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.map(orderDto,this);
 
+        this.setTotalPrice(orderDto.getUnitPrice() * orderDto.getQty());
+        this.setOrderTime(LocalDateTime.now());
+        this.setPaymentYn("N");
+        this.setDeliveryYn("N");
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.orderservice.applicaion;
 
 import com.example.orderservice.interfaces.common.OrderDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,7 @@ class OrderSenderTest {
 
     @Test
     @DisplayName("kafka message 비동기전송")
-    void sendReact() {
+    void sendReact() throws JsonProcessingException {
 
         //given
         OrderDto orderDto = OrderDto.builder()

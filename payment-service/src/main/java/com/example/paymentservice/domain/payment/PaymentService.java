@@ -1,8 +1,8 @@
-package com.example.paymentservice.service;
+package com.example.paymentservice.domain.payment;
 
-import com.example.paymentservice.dto.PaymentDto;
-import com.example.paymentservice.jpa.PaymentEntity;
-import com.example.paymentservice.jpa.PaymentRepository;
+import com.example.paymentservice.interfaces.common.PaymentDto;
+import com.example.paymentservice.domain.payment.PaymentEntity;
+import com.example.paymentservice.domain.payment.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

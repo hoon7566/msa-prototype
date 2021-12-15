@@ -38,7 +38,6 @@ public class OrderController {
     }
 
     @PostMapping(value = "/orders")
-
     public Mono<ResponseEntity<ResponseOrder>> createOrder(@RequestBody RequestOrder requestOrder, @RequestParam String userId) throws IOException, URISyntaxException {
         requestOrder.setUserId(userId);
         OrderDto orderDto = new OrderDto(requestOrder);
@@ -48,6 +47,18 @@ public class OrderController {
 
         return createOrder
                 .map( order ->ResponseEntity.status(HttpStatus.CREATED).body(order) );
+    }
+
+    @PutMapping(value = "/orders")
+    public Mono<ResponseEntity<ResponseOrder>> modifyOrder(@RequestBody RequestOrder requestOrder, @RequestParam String userId) throws IOException, URISyntaxException {
+        requestOrder.setUserId(userId);
+        OrderDto orderDto = new OrderDto(requestOrder);
+        Mono<ResponseOrder> createOrder = orderService.createOrder(orderDto)
+                .map(ResponseOrder::new);
+
+
+        return createOrder
+                .map( order ->ResponseEntity.status(HttpStatus.NO_CONTENT).body(order) );
     }
 
 

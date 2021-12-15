@@ -37,14 +37,9 @@ public class OrderSender {
 
     }
 
-    public Flux<SenderResult<Object>> sendReact(String topic , OrderDto orderDto) {
+    public Flux<SenderResult<Object>> sendReact(String topic , OrderDto orderDto) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonInString = "";
-        try{
-            jsonInString = mapper.writeValueAsString(orderDto);
-        }catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        String jsonInString = mapper.writeValueAsString(orderDto);
 
         Mono<SenderRecord<String,Object,Object>> outRecordMono =
                 Mono.just(SenderRecord.create(topic,
