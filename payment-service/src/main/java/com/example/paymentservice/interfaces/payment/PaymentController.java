@@ -6,6 +6,7 @@ import com.example.paymentservice.domain.payment.PaymentService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,30 @@ public class PaymentController {
 
     @PostMapping("/payments")
     public ResponseEntity<ResponsePayment> createPayment(@RequestBody PaymentDto paymentDto){
-        PaymentEntity createPaymentEntity = paymentService.createPayment(paymentDto);
+        PaymentDto createPaymentEntity = paymentService.createPayment(paymentDto);
 
         ResponsePayment responsePayment = new ModelMapper().map(createPaymentEntity,ResponsePayment.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePayment);
+    }
+
+
+
+    @GetMapping("/payments/{orderId}")
+    public ResponseEntity<ResponsePayment> getPayment(@PathVariable Long orderId){
+
+        PaymentDto payments = paymentService.getPaymentByOrderId(orderId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponsePayment(payments));
+
+    }
+
+    @DeleteMapping("/payments/{orderId}")
+    public ResponseEntity removePayments(@PathVariable Long orderId){
+
+        paymentService.getPaymentByOrderId(orderId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
     @Data
@@ -50,16 +71,12 @@ public class PaymentController {
         private Integer qty;
         private String userId;
         private Integer totalPrice;
+
+        public ResponsePayment(PaymentDto paymentDto){
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            modelMapper.map(this, paymentDto);
+        }
     }
 
-    @GetMapping("/payments/{orderId}")
-    public ResponseEntity<ResponsePayment> retrievePayments(@PathVariable Long orderId){
-
-        Optional<PaymentEntity> payments = paymentService.getPaymentByOrderId(orderId);
-
-        ResponsePayment responsePayment = payments.isPresent() ? modelMapper.map(payments.get(),ResponsePayment.class) : null;
-
-        return ResponseEntity.status(HttpStatus.OK).body(responsePayment);
-
-    }
 }
