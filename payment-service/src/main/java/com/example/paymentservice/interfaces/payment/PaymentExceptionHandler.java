@@ -1,4 +1,4 @@
-package com.example.paymentservice.domain.payment.exception;
+package com.example.paymentservice.interfaces.payment;
 
 import com.example.paymentservice.domain.payment.exception.PaymentException;
 import com.example.paymentservice.domain.payment.exception.PaymentErrorEnum;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class PaymentExceptionHandler {
 
     @ExceptionHandler({PaymentException.class})
     public ResponseEntity<ErrorBody> customExceptionHandler(PaymentException e){

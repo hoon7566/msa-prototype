@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PaymentErrorEnum {
     NOT_EXIST_PAYMENT(HttpStatus.OK, "Not exist Payment"),
-    DUP_PAYMENT(HttpStatus.CONFLICT, "Dup Payment");
+    DUP_PAYMENT(HttpStatus.CONFLICT, "Dup Payment"),
+    PAYMENT_INVALID(HttpStatus.CONFLICT, "INVALID Payment");
 
     private final HttpStatus httpStatus;
     private final String message;

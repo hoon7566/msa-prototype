@@ -29,15 +29,14 @@ public class PaymentService {
 
     private boolean validateToken(String token){
         //TODO: 결제 token validate 들어가야함.
+        if(false) throw new PaymentException(PaymentErrorEnum.PAYMENT_INVALID);
+
         return true;
     }
 
     public PaymentDto createPayment(PaymentDto paymentDto) {
 
-
-        if(!validateToken(paymentDto.getPaymentValidateToken())){
-            throw new RuntimeException("결제 안된건이오.");
-        }
+        validateToken(paymentDto.getPaymentValidateToken());// 토큰검증
 
         PaymentEntity paymentEntity = modelMapper.map(paymentDto, PaymentEntity.class);
         paymentEntity.setCreatedAt(LocalDateTime.now());
@@ -56,6 +55,13 @@ public class PaymentService {
                 .orElseThrow( () -> new PaymentException(PaymentErrorEnum.NOT_EXIST_PAYMENT));
     }
 
+    public void removePayment(Long orderId){
+        paymentRepository.delete(
+                paymentRepository
+                        .findByOrderId(orderId)
+                        .orElseThrow(() -> new PaymentException(PaymentErrorEnum.NOT_EXIST_PAYMENT))
+        );
+    }
 
     @KafkaListener(topics = "${messageQueue.create-order.topic}", groupId = "${messageQueue.create-order.groupId}")
     public void createPayment(String kafkaMessage) throws JsonProcessingException {

@@ -54,11 +54,8 @@ public class PaymentController {
 
     @DeleteMapping("/payments/{orderId}")
     public ResponseEntity removePayments(@PathVariable Long orderId){
-
-        paymentService.getPaymentByOrderId(orderId);
-
+        paymentService.removePayment(orderId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
     }
 
     @Data
