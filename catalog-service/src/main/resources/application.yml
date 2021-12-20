@@ -36,3 +36,9 @@ logging:
     org.hibernate.SQL: debug
 
 
+messageQueue:
+  server-config: "127.0.0.1:9092"
+  create-order:
+    topic: "order-create"
+    groupId: "order2catalog"
+

@@ -18,14 +18,14 @@ public class CatalogService {
 
     public CatalogDto createCatalog(CatalogDto catalogDto){
 
-        CatalogEntity catalogEntity = modelMapper.map(catalogDto, CatalogEntity.class);
+        Catalog catalogEntity = modelMapper.map(catalogDto, Catalog.class);
 
-        CatalogEntity createCatalogEntity = catalogRepository.save(catalogEntity);
+        Catalog createCatalogEntity = catalogRepository.save(catalogEntity);
 
         return modelMapper.map(createCatalogEntity,CatalogDto.class);
     }
 
-    public Iterable<CatalogEntity> retrieveCatalog(){
+    public Iterable<Catalog> retrieveCatalog(){
         return catalogRepository.findAll();
     }
 

@@ -22,6 +22,8 @@ public class Orders {
     private String paymentYn;
     private String deliveryYn;
 
+    private OrderStatus orderStatus;
+
     public Orders(OrderDto orderDto){
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -33,6 +35,7 @@ public class Orders {
         this.setDeliveryYn("N");
 
     }
+
 
 }
 

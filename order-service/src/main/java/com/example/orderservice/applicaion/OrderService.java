@@ -28,7 +28,7 @@ public class OrderService {
 
 
     public Mono<OrderDto> createOrder(OrderDto orderDto){
-
+        log.info("createOrder====================");
         Orders order = new Orders(orderDto);
 
         Mono<OrderDto> createOrder = orderRepository.save(order)
@@ -38,7 +38,7 @@ public class OrderService {
                     orderSender.send(env.getProperty("topic.order.create"),createOrderDto);
                     return new OrderDto(orders);
                 });
-
+        log.info("createOrder===================="+order.toString());
         return createOrder;
     }
 

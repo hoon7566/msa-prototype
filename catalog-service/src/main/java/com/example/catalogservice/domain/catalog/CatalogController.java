@@ -30,7 +30,7 @@ public class CatalogController {
 
     }
 
-    @PostMapping("/orders")
+    @PostMapping("/catalogs")
     public ResponseEntity<CatalogDto> createCatalog(@RequestBody CatalogDto catalogDto){
 
         CatalogDto createCatalog = catalogService.createCatalog(catalogDto);
@@ -40,10 +40,10 @@ public class CatalogController {
 
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/catalogs")
     public ResponseEntity<List<CatalogDto>> retrieveCatalogs(){
 
-        Iterable<CatalogEntity> catalogs= catalogService.retrieveCatalog();
+        Iterable<Catalog> catalogs= catalogService.retrieveCatalog();
 
         List<CatalogDto> catalogList = new ArrayList<>();
 
@@ -52,4 +52,6 @@ public class CatalogController {
         return ResponseEntity.status(HttpStatus.OK).body(catalogList);
 
     }
+
+
 }

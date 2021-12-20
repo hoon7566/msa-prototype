@@ -39,3 +39,5 @@ topic:
   order:
     create: "order-create"
 
+catalog_service:
+  url: "http://CATALOG-SERVICE/catalog-service/productStock/%s"
