@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -31,15 +32,21 @@ public class OrderService {
         log.info("createOrder====================");
         Orders order = new Orders(orderDto);
 
-        Mono<OrderDto> createOrder = orderRepository.save(order)
-                .map(orders -> {
-                    OrderDto createOrderDto = new OrderDto(orders);
-                    //kafka로 order전송
-                    orderSender.send(env.getProperty("topic.order.create"),createOrderDto);
-                    return new OrderDto(orders);
-                });
+        Mono<Orders> createOrder = orderRepository.save(order);
+        Mono<OrderDto> orderDtoMono =   createOrder.map(orders -> {
+
+            OrderDto createOrderDto = new OrderDto(orders);
+            //kafka로 order전송
+            orderSender.send(env.getProperty("topic.order.create"),createOrderDto);
+
+            return new OrderDto(orders);
+
+            }
+        );
+
+
         log.info("createOrder===================="+order.toString());
-        return createOrder;
+        return orderDtoMono;
     }
 
     @Transactional(readOnly = true)

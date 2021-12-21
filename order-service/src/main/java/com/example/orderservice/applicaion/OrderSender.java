@@ -23,14 +23,20 @@ public class OrderSender {
 
     public OrderDto send(String topic , OrderDto orderDto){
         ObjectMapper mapper = new ObjectMapper();
+
         String jsonInString = "";
+        log.info("===============orderDto: "+ orderDto);
         try{
             jsonInString = mapper.writeValueAsString(orderDto);
         }catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        try{
+            kafkaTemplate.send(topic, jsonInString);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        kafkaTemplate.send(topic, jsonInString);
         log.info("kafka Producer sent data from the Order microservice: "+ orderDto);
 
         return orderDto;

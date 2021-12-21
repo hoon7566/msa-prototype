@@ -23,11 +23,12 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/productStock/{productId}")
-    public ResponseEntity<Integer> productStock(@PathVariable Long productId){
+    public ResponseEntity<Integer> getProductStock(@PathVariable Long productId){
         log.info("================> productStock");
-        Integer productStock = productService.productStock(productId);
+        Integer productStock = productService.getProductStock(productId);
         log.info("================> productStock = "+ productStock);
         return ResponseEntity.status(HttpStatus.OK).body(productStock);
 
     }
+
 }

@@ -20,7 +20,7 @@ public class OrderBeforeSaveCallback implements BeforeSaveCallback<Orders> {
     @Override
     public Publisher<Orders> onBeforeSave(Orders entity, OutboundRow row, SqlIdentifier table) {
 
-        Integer productStock = orderServiceClient.productStock(entity.getProductId());
+        Integer productStock = orderServiceClient.getProductStock(entity.getProductId());
         log.info("entity.getProductId() ===> 재고수량 :" +productStock);
         if(productStock<= 0) throw new RuntimeException("재고가 없음미ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 

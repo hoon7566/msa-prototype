@@ -21,13 +21,17 @@ class OrderServiceTest {
     @Test
     public void createOrder(){
 
+        //given
         OrderDto orderDto = OrderDto.builder()
-                .productId(1001L)
+                .productId(9995L)
                 .qty(10)
                 .unitPrice(1500)
                 .build();
+
+        //when
         Mono<OrderDto> orderMono =  orderService.createOrder(orderDto);
 
+        //then
         StepVerifier.create(orderMono)
                 .assertNext(it ->{
                     log.info(it.toString());

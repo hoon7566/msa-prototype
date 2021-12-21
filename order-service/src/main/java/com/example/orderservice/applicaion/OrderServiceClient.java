@@ -11,5 +11,8 @@ import java.util.List;
 public interface OrderServiceClient {
 
     @GetMapping("/catalog-service/productStock/{productId}")
-    Integer productStock(@PathVariable Long productId);
+    Integer getProductStock(@PathVariable Long productId);
+
+    @PutMapping("/catalog-service/productStock/{productId}")
+    Integer putProductStock(@PathVariable Long productId);
 }

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
-    public Integer productStock(Long productId){
+    public Integer getProductStock(Long productId){
         return productRepository.findById(productId)
                 .map(products -> products.getStock())
                 .orElseThrow(RuntimeException::new);
