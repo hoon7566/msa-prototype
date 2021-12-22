@@ -33,6 +33,7 @@ public class Orders {
         this.setOrderTime(LocalDateTime.now());
         this.setPaymentYn("N");
         this.setDeliveryYn("N");
+        this.setOrderStatus(OrderStatus.결제대기);
 
     }
 

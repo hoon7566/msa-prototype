@@ -6,7 +6,8 @@ CREATE TABLE orders(
        order_time datetime,
        total_price int,
        payment_yn VARCHAR(50),
-       delivery_yn  VARCHAR(50)
+       delivery_yn  VARCHAR(50),
+       order_status  VARCHAR(50)
 
 );
 
