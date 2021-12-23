@@ -56,9 +56,10 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/removeToken, /user-service/login
+            - Path=/user-service/removeToken, /user-service/login, /user-service/auth/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - CookieSetFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:

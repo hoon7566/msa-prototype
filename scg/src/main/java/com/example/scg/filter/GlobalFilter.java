@@ -5,10 +5,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -37,6 +41,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             // Global Post Filter
             //Mono는 webflux에서 단일값 전송할때 Mono값으로 전송
             return chain.filter(exchange).then(Mono.fromRunnable(()->{
+
                 if (config.isPostLogger()){
                     log.info("Global Filter End: response statuscode -> {}" , response.getStatusCode());
                 }

@@ -29,8 +29,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -46,20 +49,24 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 
+/**
+ * access token는 바로 인증서버를 안거치고 통과시키고,
+ * refresh token은 인증서버를 거쳐서 인증절차를 수행후에 통과시키기
+ * */
+
 
 @Component
 @Slf4j
-
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
     Environment env;
-    AtomicReference<HashSet<String>>  blackList;
 
     public static class Config{
 
@@ -68,7 +75,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public AuthorizationHeaderFilter(Environment env,AtomicReference<HashSet<String>>  blackList) {
         super(Config.class);
         this.env = env;
-        this.blackList = blackList;
     }
     static class Pair{
         String name;
@@ -79,47 +85,70 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
     }
 
-    // login -> token -> users (with token) -> header(include token)
+    private ConcurrentHashMap<String , String> validToken(MultiValueMap<String, HttpCookie> cookies) throws Exception{
+
+        ConcurrentHashMap result;
+
+        log.info("=================================token valid start");
+
+
+        try{
+            String accessToken = cookies.get("access-token").get(0).getValue();
+            result = validAccessToken(accessToken);
+        }catch (Exception e){
+            String refreshToken = cookies.get("refresh-token").get(0).getValue();
+            result = validRefreshToken(refreshToken);
+        }
+
+        return result;
+
+    }
+
+    private ConcurrentHashMap<String , String> validAccessToken(String accessToken) throws Exception{
+
+        if(!isJwtValid(accessToken)) throw new RuntimeException();
+        ConcurrentHashMap<String , String> result = new ConcurrentHashMap<>();
+        String subject = null;
+        subject = Jwts.parser().setSigningKey(env.getProperty("token.secret"))
+                .parseClaimsJws(accessToken).getBody()
+                .getSubject();
+        result.put("data", subject);
+
+
+        return result;
+    }
+
+    private ConcurrentHashMap<String , String> validRefreshToken(String refreshToken){
+        ConcurrentHashMap<String , String> result = new ConcurrentHashMap<>();
+        WebClient.create("http://localhost:8000/user-service/auth/refresh")
+                .get()
+                .cookie("refreshToken", refreshToken)
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe(s -> {
+                    log.info("========================result start");
+                    result.put("data", s);
+                    log.info("========================result end"+ s);
+                });
+
+        return result;
+    }
+
+
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-
-            HttpCookie jwtCookie =null;
+            ConcurrentHashMap<String , String> parseTokenMap;
             try{
-                jwtCookie = request.getCookies().get("jwt").get(0);
-            }catch (Exception e){
-                //e.printStackTrace();
-            }
-
-
-            if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION) && jwtCookie==null) { // header에 AUTHORIZATION가 포함되어잇는지.
-                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
-                //return chain.filter(redirect(exchange, "No authorization header", HttpStatus.UNAUTHORIZED));
-            }
-            String jwt = null;
-            try{
-                String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                 jwt = authorizationHeader.replace("Bearer" , "");
-            }catch (Exception e){
-                jwt = jwtCookie.getValue();
-            }
-
-            if(blackList.get().contains(jwt)){
-                return onError(exchange, "만료된 JWT token ", HttpStatus.UNAUTHORIZED);
-            }
-
-            if (!isJwtValid(jwt)){
+                parseTokenMap = validToken(request.getCookies());
+            }catch (Exception e) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
-                //return chain.filter(redirect(exchange, "No authorization header", HttpStatus.UNAUTHORIZED));
             }
 
-
-            String userId = Jwts.parser().setSigningKey(env.getProperty("token.secret"))
-                    .parseClaimsJws(jwt).getBody().getSubject();
-            //mutatedRequest.mutate().header("userId",userId);
             List<Pair> configList = new ArrayList<>();
-            configList.add( new Pair("userId",userId));
+            String data = parseTokenMap.get("data");
+            configList.add( new Pair("data",data));
             URI newUri = AddParameter(exchange,configList);
 
 
@@ -130,9 +159,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             // .map(a->a.toString(Charset.forName("UTF-8")))
             // .subscribe(System.out::println);
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
-
-
-
         };
     }
 

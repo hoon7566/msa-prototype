@@ -91,6 +91,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/auth/refresh")
+    public ResponseEntity<String> refresh(HttpServletRequest request){
+
+        Cookie[] cookies = request.getCookies();
+        String name = cookies[0].getName();
+        log.info("===refresh"+name);
+        //TODO: 검증된 token인지 , 검증된토큰 O -> 액세스토큰 생성 , 검증된토큰 X -> refreshToken 만료시키기 
+
+        return ResponseEntity.status(HttpStatus.OK).body(name);
+    }
+
 
 
 

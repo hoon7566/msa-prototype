@@ -87,10 +87,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                         Long.parseLong(env.getProperty("token.expiration_time"))))
                 .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
                 .compact();
-        Cookie cookieToken = new Cookie("jwt",token);
+
+        String token2 = Jwts.builder()
+                .setSubject(userDto.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis()+
+                        Long.parseLong("1111111111111")))
+                .signWith(SignatureAlgorithm.HS512,env.getProperty("token.secret"))
+                .compact();
+        Cookie cookieAccessToken = new Cookie("access-token",token);
+        Cookie cookieRefreshToken = new Cookie("refresh-token",token2);
         //cookieToken.setHttpOnly(true);
-        response.addCookie(cookieToken);
-        response.setHeader("token",token);
+        response.addCookie(cookieAccessToken);
+        response.addCookie(cookieRefreshToken);
         response.setHeader("userId",userDto.getUserId());
     }
 }
